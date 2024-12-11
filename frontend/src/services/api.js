@@ -8,7 +8,7 @@ const API = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
-  //withCredentials: true, // Session cookie'lerini gönder
+  withCredentials: true, // Session cookie'lerini gönder
 });
 
 

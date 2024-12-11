@@ -43,7 +43,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'rest_framework_simplejwt',
 ]
-
+#
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -140,6 +140,10 @@ REST_FRAMEWORK = {
 AUTH_USER_MODEL = 'users.CustomUser'
 
 CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_CREDENTIALS = True
 
 SESSION_COOKIE_AGE = 3600  # Oturum süresi (saniye olarak). Örneğin, 3600 = 1 saat
 SESSION_SAVE_EVERY_REQUEST = True  # Her istekte oturum süresini yenile
+
+SESSION_COOKIE_SAMESITE = 'Lax'  # Çerezlerin same-site politikası
+SESSION_COOKIE_SECURE = False   # HTTPS kullanıyorsanız True yapın

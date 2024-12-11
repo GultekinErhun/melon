@@ -11,6 +11,15 @@ class RegisterSerializer(serializers.ModelSerializer):
     })
     confirm_password = serializers.CharField(write_only=True)
     
+    username = serializers.CharField(
+        validators=[
+            UniqueValidator(
+                queryset=CustomUser.objects.all(),
+                message="Bu kullanıcı adı zaten kullanılıyor."  # Hata mesajını özelleştirdik
+            )
+        ]
+    )
+    
     email = serializers.EmailField(
         validators=[
             UniqueValidator(

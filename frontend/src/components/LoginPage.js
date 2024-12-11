@@ -1,28 +1,21 @@
-// frontend/src/components/LoginPage.js
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { loginUser } from '../services/api'; // Backend ile iletişim
+import { loginUser } from '../services/api';
 
-function LoginPage() {
-  const [email, setEmail] = useState(''); // Email bilgisi
-  const [password, setPassword] = useState(''); // Şifre bilgisi
-  const [error, setError] = useState(''); // Hata mesajı
-  const navigate = useNavigate(); // Yönlendirme için kullanılan hook
+const LoginPage = () => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError(''); // Hata mesajını sıfırla
     try {
-      // Backend'den login isteği gönderiliyor
-      const data = await loginUser(email, password);
-      
-      // Başarılı giriş: Token'ları localStorage'a kaydediyoruz
-      localStorage.setItem('accessToken', data.tokens.access);
-      localStorage.setItem('refreshToken', data.tokens.refresh);
-      alert('Giriş başarılı!'); // Başarı mesajı
-      navigate('/profile'); // Başarılı giriş sonrası profile yönlendirme
+      await loginUser(email, password); // Backend'e giriş isteği gönder
+      alert('Giriş başarılı!');
+      navigate('/profile'); // Profile sayfasına yönlendirme
     } catch (err) {
-      // Hata durumunda kullanıcıya bilgi ver
       setError('Email veya şifre hatalı.');
     }
   };
@@ -36,7 +29,7 @@ function LoginPage() {
           <input
             type="email"
             value={email}
-            onChange={(e) => setEmail(e.target.value)} // Email state güncellenir
+            onChange={(e) => setEmail(e.target.value)}
             required
           />
         </div>
@@ -45,15 +38,15 @@ function LoginPage() {
           <input
             type="password"
             value={password}
-            onChange={(e) => setPassword(e.target.value)} // Şifre state güncellenir
+            onChange={(e) => setPassword(e.target.value)}
             required
           />
         </div>
-        {error && <p style={{ color: 'red' }}>{error}</p>} {/* Hata mesajı */}
+        {error && <p style={{ color: 'red' }}>{error}</p>}
         <button type="submit">Giriş Yap</button>
       </form>
     </div>
   );
-}
+};
 
 export default LoginPage;

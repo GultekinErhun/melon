@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { registerUser } from '../services/api';
 
+
 function RegisterPage() {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
@@ -22,7 +23,10 @@ function RegisterPage() {
       navigate('/login'); // Kayıt sonrası giriş sayfasına yönlendir
     } catch (err) {
       // Backend'den dönen hatayı kullanıcıya göster
-      if (err.email) {
+
+      if (err.username) {
+        setError(err.username[0]); // Kullanıcı adı hatasını göster
+      } else if (err.email) {
         setError(err.email[0]); // Email'e özel hata mesajı
       } else if (err.password) {
         setError(err.password[0]); // Şifreye özel hata mesajı
