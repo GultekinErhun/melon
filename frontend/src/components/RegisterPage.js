@@ -27,7 +27,9 @@ function RegisterPage() {
       } else if (err.password) {
         setError(err.password[0]); // Şifreye özel hata mesajı
       } else {
+        
         setError("Kayıt başarısız. Lütfen bilgilerinizi kontrol edin.");
+
       }
     }
   };

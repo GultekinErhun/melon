@@ -8,7 +8,9 @@ const API = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
+  //withCredentials: true, // Session cookie'lerini gönder
 });
+
 
 
 
@@ -31,6 +33,15 @@ export const registerUser = async (username, email, password, confirmPassword) =
     throw error;
   }
 };
+
+
+
+// Kullanıcı profilini alma isteği
+export const getProfile = async () => {
+  const response = await API.get('profile/');
+  return response.data;
+};
+
 
 export const loginUser = async (email, password) => {
   const response = await API.post('users/login/', { email, password });

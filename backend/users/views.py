@@ -6,6 +6,8 @@ from rest_framework import status
 from .serializers import RegisterSerializer, LoginSerializer
 from rest_framework_simplejwt.tokens import RefreshToken
 import json
+from django.contrib.auth import authenticate, login
+
 
 class RegisterView(APIView):
     def post(self, request):
@@ -22,16 +24,28 @@ class RegisterView(APIView):
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+from rest_framework.views import APIView
+
+class ProfileView(APIView):
+    def get(self, request):
+        if request.user.is_authenticated:
+            return Response({"username": request.user.username, "email": request.user.email}, status=200)
+        else:
+            return Response({"error": "Kullanıcı oturum açmamış."}, status=401)
 
 
 class LoginView(APIView):
     def post(self, request):
-        serializer = LoginSerializer(data=request.data)
-        if serializer.is_valid():
-            user = serializer.validated_data
-            tokens = RefreshToken.for_user(user)
-            return Response({
-                "access": str(tokens.access_token),
-                "refresh": str(tokens),
-            }, status=status.HTTP_200_OK)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        username = request.data.get('username')
+        password = request.data.get('password')
+
+        # Kullanıcı kimlik doğrulaması
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            # Oturum aç
+            login(request, user)
+            return Response({"message": "Giriş başarılı! Oturum açıldı."}, status=status.HTTP_200_OK)
+        else:
+            return Response({"error": "Kullanıcı adı veya şifre hatalı."}, status=status.HTTP_401_UNAUTHORIZED)
+
+
