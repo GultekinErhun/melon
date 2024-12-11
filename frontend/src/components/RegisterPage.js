@@ -13,18 +13,25 @@ function RegisterPage() {
 
 
   const handleSubmit = async (e) => {
-    e.preventDefault(); // Formun default davranışını engeller
+    e.preventDefault();
+    setError(''); // Hata mesajını temizle
     try {
       console.log("Kayıt isteği gönderiliyor...");
-      const data = await registerUser(username, email, password, confirmPassword);
-      console.log("Kayıt başarılı:", data);
+      await registerUser(username, email, password, confirmPassword);
       alert("Kayıt başarılı! Şimdi giriş yapabilirsiniz.");
       navigate('/login'); // Kayıt sonrası giriş sayfasına yönlendir
     } catch (err) {
-      console.error("Kayıt Hatası:", err.response?.data || err.message);
-      setError(err.response?.data?.detail || "Kayıt başarısız. Lütfen bilgilerinizi kontrol edin.");
+      // Backend'den dönen hatayı kullanıcıya göster
+      if (err.email) {
+        setError(err.email[0]); // Email'e özel hata mesajı
+      } else if (err.password) {
+        setError(err.password[0]); // Şifreye özel hata mesajı
+      } else {
+        setError("Kayıt başarısız. Lütfen bilgilerinizi kontrol edin.");
+      }
     }
   };
+  
   
 
   return (

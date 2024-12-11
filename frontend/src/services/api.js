@@ -10,29 +10,27 @@ const API = axios.create({
   },
 });
 
-// Kayıt işlemi için düzenlenmiş fonksiyon
+
+
+// frontend/src/services/api.js
 export const registerUser = async (username, email, password, confirmPassword) => {
   try {
-    // Backend'in beklediği JSON yapısı
     const payload = {
-      username: username.trim(), // Fazladan boşlukları kaldır
-      email: email.trim().toLowerCase(), // Email küçük harfe çevrilir
+      username: username.trim(),
+      email: email.trim().toLowerCase(),
       password: password,
       confirm_password: confirmPassword,
     };
-
-    // POST isteği gönderiyoruz
     const response = await API.post('users/register/', payload);
-
-    // Başarılı yanıtı döndürüyoruz
     return response.data;
   } catch (error) {
-    // Hata varsa logla ve fırlat
-    console.error('RegisterUser API Error:', error.response?.data || error.message);
-    throw error; // Hata yönetimi için çağıran fonksiyona fırlatılır
+    // Backend hatasını al ve fırlat
+    if (error.response && error.response.data) {
+      throw error.response.data; // Backend'den dönen hatayı ilet
+    }
+    throw error;
   }
 };
-
 
 export const loginUser = async (email, password) => {
   const response = await API.post('users/login/', { email, password });
